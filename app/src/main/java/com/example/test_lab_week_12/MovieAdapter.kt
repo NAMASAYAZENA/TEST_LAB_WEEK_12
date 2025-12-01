@@ -9,8 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.test_lab_week_12.model.Movie
 
-class MovieAdapter(private val clickListener: MovieClickListener) :
-    RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
+class MovieAdapter(
+    private val onClick: (Movie) -> Unit
+) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
     private val movies = mutableListOf<Movie>()
 
@@ -25,7 +26,7 @@ class MovieAdapter(private val clickListener: MovieClickListener) :
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val movie = movies[position]
         holder.bind(movie)
-        holder.itemView.setOnClickListener { clickListener.onMovieClick(movie) }
+        holder.itemView.setOnClickListener { onClick(movie) }
     }
 
     fun addMovies(movieList: List<Movie>) {
@@ -42,13 +43,9 @@ class MovieAdapter(private val clickListener: MovieClickListener) :
         fun bind(movie: Movie) {
             titleText.text = movie.title
             Glide.with(itemView.context)
-                .load("$imageUrl${movie.posterPath}")
+                .load(imageUrl + movie.posterPath)
                 .placeholder(R.mipmap.ic_launcher)
                 .into(poster)
         }
-    }
-
-    interface MovieClickListener {
-        fun onMovieClick(movie: Movie)
     }
 }
